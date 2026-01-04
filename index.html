@@ -3,7 +3,12 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover" />
-  <title>CIVITAS: RUINES</title>
+  <title>CIVITAS: RUINES</title> 
+  <link rel="manifest" href="manifest.json">
+<meta name="theme-color" content="#0f1115">
+<link rel="apple-touch-icon" href="icons/icon-192.png">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
 
   <style>
     :root{
@@ -56,7 +61,7 @@
     /* Plateau */
     .board{
       width:min(1200px, 96vw);
-      height:min(860px, 96vh);
+      height:min(860px, 96svh);
       border-radius:18px;
       background:
         radial-gradient(1200px 700px at 30% 20%, rgba(255,255,255,.04), transparent 60%),
@@ -456,8 +461,17 @@
           </div>
         </div>
 
-      </div>
+     </div>
     </div>
   </div>
+
+<script>
+  if ("serviceWorker" in navigator) {
+    window.addEventListener("load", () => {
+      navigator.serviceWorker.register("sw.js");
+    });
+  }
+</script>
+
 </body>
 </html>
