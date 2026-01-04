@@ -1,495 +1,355 @@
 <!DOCTYPE html>
 <html lang="fr">
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover" />
-  <title>CIVITAS: RUINES</title> 
-  <link rel="manifest" href="manifest.json">
-<meta name="theme-color" content="#0f1115">
-<link rel="apple-touch-icon" href="icons/icon-192.png">
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+<title>CIVITAS</title>
+
+<!-- PWA -->
+<link rel="manifest" href="manifest.json">
+<meta name="theme-color" content="#2a2418">
 <meta name="apple-mobile-web-app-capable" content="yes">
 <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
 
-  <style>
-    :root{
-      /* Option B: stratégique immersive */
-      --bg0:#07090d;
-      --bg1:#0f1115;
+<style>
+/* =========================
+   GLOBAL — STYLE PARCHEMIN
+========================= */
+:root{
+  --paper:#efe7d3;
+  --ink:#2b2418;
+  --muted:#6f6652;
+  --accent:#8a6a3f;
+  --danger:#7a2e2e;
+  --good:#4f6b4f;
+}
 
-      --panel0: rgba(18, 22, 30, .92);
-      --panel1: rgba(24, 29, 40, .82);
-      --panelBorder: rgba(255,255,255,.10);
+*{box-sizing:border-box}
+html,body{height:100%;margin:0}
+body{
+  font-family: "Georgia", serif;
+  background:
+    radial-gradient(1200px 800px at 30% 20%, #f6f0e3, transparent 60%),
+    linear-gradient(#e9dfc6,#d8ccb0);
+  color:var(--ink);
+  overflow:hidden;
+}
 
-      --text:#e8e6df;
-      --muted: rgba(232,230,223,.72);
+/* =========================
+   SCREENS
+========================= */
+.screen{
+  position:absolute;
+  inset:0;
+  display:none;
+  padding:16px;
+}
+.screen.active{display:block}
 
-      --accent:#b08a5a;      /* cuivre */
-      --good:#3f7a5a;        /* vert éteint */
-      --warn:#8b6a2f;        /* ocre */
-      --danger:#8b3a3a;      /* rouge éteint */
+/* =========================
+   ACCUEIL
+========================= */
+#home{
+  display:flex;
+  flex-direction:column;
+  justify-content:center;
+  align-items:center;
+  gap:24px;
+}
 
-      --shadow: rgba(0,0,0,.55);
-    }
+#title{
+  font-size:42px;
+  letter-spacing:4px;
+}
 
-    *{ box-sizing:border-box; }
-    html, body { height:100%; }
-    body{
-      margin:0;
-      overflow:hidden; /* pas de scroll */
-      font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,Arial,sans-serif;
-      color: var(--text);
-      background:
-        radial-gradient(1200px 800px at 20% 20%, rgba(255,255,255,.06), transparent 60%),
-        radial-gradient(900px 700px at 80% 30%, rgba(255,255,255,.04), transparent 62%),
-        radial-gradient(1400px 900px at 50% 95%, rgba(0,0,0,.35), rgba(0,0,0,.92)),
-        linear-gradient(180deg, var(--bg1), var(--bg0));
-    }
+.menuBtn{
+  padding:14px 26px;
+  font-size:18px;
+  background:var(--paper);
+  border:2px solid var(--ink);
+  cursor:pointer;
+}
 
-    /* Conteneur */
-    .frame{
-      height:100%;
-      padding:
-        max(10px, env(safe-area-inset-top))
-        max(10px, env(safe-area-inset-right))
-        max(10px, env(safe-area-inset-bottom))
-        max(10px, env(safe-area-inset-left));
-      display:flex;
-      align-items:center;
-      justify-content:center;
-    }
+/* =========================
+   WIZARD
+========================= */
+#wizard{
+  max-width:640px;
+  margin:auto;
+}
 
-    /* Plateau */
-    .board{
-      width:min(1200px, 96vw);
-      height:min(860px, 96svh);
-      border-radius:18px;
-      background:
-        radial-gradient(1200px 700px at 30% 20%, rgba(255,255,255,.04), transparent 60%),
-        linear-gradient(180deg, rgba(255,255,255,.04), rgba(0,0,0,.10));
-      box-shadow: 0 28px 90px var(--shadow);
-      border: 1px solid rgba(255,255,255,.10);
-      overflow:hidden;
-      position:relative;
-    }
+.step{
+  margin-bottom:20px;
+}
 
-    .ui{
-      position:absolute;
-      inset:0;
-      display:grid;
-      grid-template-rows: auto 1fr auto;
-      gap:10px;
-      padding:12px;
-    }
+.step h2{
+  margin:0 0 8px;
+}
 
-    /* Portrait: message */
-    .rotate{
-      position:absolute;
-      inset:0;
-      display:none;
-      align-items:center;
-      justify-content:center;
-      padding:18px;
-      background: rgba(0,0,0,.75);
-      z-index:50;
-      text-align:center;
-    }
-    .rotateCard{
-      width:min(520px, 92vw);
-      border:1px solid rgba(255,255,255,.14);
-      background: linear-gradient(180deg, rgba(18,22,30,.92), rgba(18,22,30,.72));
-      border-radius:16px;
-      padding:16px;
-    }
-    .rotateTitle{
-      font-weight:900;
-      letter-spacing:.08em;
-      text-transform:uppercase;
-    }
-    .rotateBody{
-      margin-top:10px;
-      color: var(--muted);
-      line-height:1.3;
-    }
-    .rotateIcon{ font-size:32px; margin-top:12px; }
+select,input{
+  width:100%;
+  padding:10px;
+  font-size:16px;
+}
 
-    @media (orientation: portrait){
-      .rotate{ display:flex; }
-    }
+/* =========================
+   GAME UI
+========================= */
+#game{
+  display:grid;
+  grid-template-columns: 1fr 320px;
+  grid-template-rows: auto 1fr auto;
+  gap:8px;
+  height:100%;
+}
 
-    /* HUD */
-    .hud{
-      border-radius:14px;
-      border: 1px solid var(--panelBorder);
-      background: linear-gradient(180deg, var(--panel0), var(--panel1));
-      padding:10px 12px;
-      display:flex;
-      align-items:center;
-      justify-content:space-between;
-      gap:10px;
-    }
+#hud{
+  grid-column:1/3;
+  padding:8px;
+  border-bottom:2px solid var(--ink);
+}
 
-    .hudLeft{
-      display:flex;
-      flex-direction:column;
-      gap:2px;
-      min-width:0;
-    }
-    .hudTitle{
-      font-weight:900;
-      letter-spacing:.03em;
-      white-space:nowrap;
-      overflow:hidden;
-      text-overflow:ellipsis;
-    }
-    .hudMeta{
-      font-size:12px;
-      color: var(--muted);
-      white-space:nowrap;
-      overflow:hidden;
-      text-overflow:ellipsis;
-    }
+#map{
+  background:#ddd3b8;
+  border:2px solid var(--ink);
+  position:relative;
+}
 
-    .pills{
-      display:flex;
-      gap:8px;
-      flex-wrap:wrap;
-      justify-content:flex-end;
-    }
-    .pill{
-      font-size:12px;
-      padding:7px 10px;
-      border-radius:999px;
-      border:1px solid rgba(255,255,255,.12);
-      background: rgba(255,255,255,.06);
-      white-space:nowrap;
-    }
-    .pill b{ color: var(--accent); font-weight:900; }
+#side{
+  border-left:2px solid var(--ink);
+  padding:8px;
+  overflow:auto;
+}
 
-    /* Contenu */
-    .content{
-      display:grid;
-      grid-template-columns: 1.45fr 0.85fr;
-      gap:10px;
-      min-height:0;
-    }
+#actions{
+  grid-column:1/3;
+  display:grid;
+  grid-template-columns:repeat(4,1fr);
+  gap:8px;
+  padding:8px;
+  border-top:2px solid var(--ink);
+}
 
-    /* Carte */
-    .map{
-      border-radius:14px;
-      border:1px solid rgba(255,255,255,.10);
-      overflow:hidden;
-      position:relative;
-      background:
-        radial-gradient(900px 600px at 18% 22%, rgba(255,255,255,.08), transparent 58%),
-        linear-gradient(180deg, rgba(0,0,0,.10), rgba(0,0,0,.35));
-    }
-    .map svg{ width:100%; height:100%; display:block; }
-    .mapBrand{
-      position:absolute;
-      top:10px; left:10px;
-      padding:8px 10px;
-      border-radius:12px;
-      border:1px solid rgba(255,255,255,.12);
-      background: rgba(0,0,0,.25);
-      font-weight:900;
-      letter-spacing:.06em;
-      text-transform:uppercase;
-      font-size:12px;
-    }
+.action{
+  border:1px solid var(--ink);
+  background:var(--paper);
+  padding:6px;
+  font-size:14px;
+  cursor:pointer;
+}
 
-    /* Panneau */
-    .panel{
-      border-radius:14px;
-      border: 1px solid var(--panelBorder);
-      background: linear-gradient(180deg, var(--panel0), var(--panel1));
-      padding:10px;
-      display:flex;
-      flex-direction:column;
-      gap:10px;
-      min-height:0;
-    }
-
-    .block{
-      border-radius:12px;
-      border: 1px solid rgba(255,255,255,.10);
-      background: rgba(255,255,255,.05);
-      padding:10px;
-    }
-    .blockTitle{
-      font-weight:900;
-      letter-spacing:.08em;
-      text-transform:uppercase;
-      font-size:12px;
-      color: rgba(232,230,223,.90);
-    }
-    .blockBody{
-      margin-top:8px;
-      font-size:13px;
-      line-height:1.25;
-      color: rgba(232,230,223,.88);
-    }
-    .kv{
-      display:flex;
-      justify-content:space-between;
-      gap:10px;
-      font-size:12px;
-      color: var(--muted);
-      margin-top:6px;
-    }
-    .kv span:last-child{ color: rgba(232,230,223,.86); }
-
-    .tagRow{
-      display:flex;
-      gap:8px;
-      flex-wrap:wrap;
-      margin-top:8px;
-    }
-    .tag{
-      font-size:11px;
-      padding:6px 8px;
-      border-radius:999px;
-      border:1px solid rgba(255,255,255,.10);
-      background: rgba(255,255,255,.06);
-      color: rgba(232,230,223,.85);
-    }
-    .tag.good{ border-color: rgba(63,122,90,.35); color: rgba(160,220,190,.95); }
-    .tag.warn{ border-color: rgba(139,106,47,.35); color: rgba(230,200,140,.95); }
-    .tag.danger{ border-color: rgba(139,58,58,.35); color: rgba(240,170,170,.95); }
-
-    /* Actions */
-    .actions{
-      border-radius:14px;
-      border: 1px solid var(--panelBorder);
-      background: linear-gradient(180deg, rgba(18,22,30,.62), rgba(18,22,30,.92));
-      padding:10px;
-      display:grid;
-      grid-template-columns: repeat(4, 1fr);
-      gap:10px;
-    }
-
-    .action{
-      border-radius:12px;
-      border:1px solid rgba(255,255,255,.12);
-      background: rgba(255,255,255,.06);
-      padding:10px;
-      height:70px;
-      display:flex;
-      flex-direction:column;
-      justify-content:center;
-      gap:4px;
-    }
-    .aTitle{ font-weight:900; font-size:13px; }
-    .aDesc{
-      font-size:11px;
-      color: var(--muted);
-      white-space:nowrap;
-      overflow:hidden;
-      text-overflow:ellipsis;
-    }
-    .aRisk{
-      font-size:11px;
-      margin-top:2px;
-      color: rgba(232,230,223,.85);
-    }
-    .riskDot{
-      display:inline-block;
-      width:8px; height:8px;
-      border-radius:999px;
-      margin-right:6px;
-      transform: translateY(1px);
-      background: var(--warn);
-    }
-    .riskDot.high{ background: var(--danger); }
-    .riskDot.low{ background: var(--good); }
-  </style>
+/* =========================
+   HEX MAP
+========================= */
+canvas{
+  width:100%;
+  height:100%;
+  display:block;
+}
+</style>
 </head>
 
 <body>
-  <div id="pwaDebug" style="
-  position:fixed; left:10px; right:10px; bottom:10px;
-  z-index:999999; padding:8px 10px; border-radius:10px;
-  background:rgba(0,0,0,.65); color:#fff; font:12px/1.2 -apple-system, Arial;
-  border:1px solid rgba(255,255,255,.15);
-">
-  DEBUG…
+
+<!-- =========================
+     HOME
+========================= -->
+<div id="home" class="screen active">
+  <div id="title">CIVITAS</div>
+  <button class="menuBtn" onclick="startWizard()">Créer civilisation</button>
+  <button class="menuBtn" onclick="loadArchive()">Archives</button>
+</div>
+
+<!-- =========================
+     WIZARD
+========================= -->
+<div id="wizard" class="screen">
+  <div class="step">
+    <h2>A — Époque</h2>
+    <select id="epoch">
+      <option value="prehistoire">Préhistoire</option>
+      <option value="antiquite">Antiquité</option>
+      <option value="medieval">Médiéval</option>
+      <option value="industriel">Industriel</option>
+    </select>
+  </div>
+
+  <div class="step">
+    <h2>B — Monde</h2>
+    <select id="world">
+      <option value="continent">Terre alternative</option>
+      <option value="archipel">Archipel</option>
+      <option value="supercontinent">Supercontinent</option>
+    </select>
+  </div>
+
+  <div class="step">
+    <h2>C — Civilisation</h2>
+    <input id="civName" placeholder="Nom de votre civilisation">
+  </div>
+
+  <div class="step">
+    <h2>D — Difficulté</h2>
+    <div>IMPITOYABLE (modèle CivilWar)</div>
+  </div>
+
+  <button class="menuBtn" onclick="startGame()">Fonder</button>
+</div>
+
+<!-- =========================
+     GAME
+========================= -->
+<div id="game" class="screen">
+  <div id="hud"></div>
+  <div id="map"><canvas id="mapCanvas"></canvas></div>
+  <div id="side"></div>
+  <div id="actions"></div>
 </div>
 
 <script>
-  (function () {
-    const el = document.getElementById("pwaDebug");
-    const standalone =
-      (window.matchMedia && window.matchMedia("(display-mode: standalone)").matches) ||
-      window.navigator.standalone;
-    el.textContent = "URL: " + location.href + " | standalone: " + (!!standalone);
-  })();
-</script>
-  <div class="frame">
-    <div class="board">
+/* =========================
+   GAME STATE
+========================= */
+let game=null;
 
-      <div class="rotate">
-        <div class="rotateCard">
-          <div class="rotateTitle">Mode paysage requis</div>
-          <div class="rotateBody">
-            Pour une interface stratégique lisible (carte + panneaux), le jeu se joue en <b>format paysage</b>.
-            Tourne ton téléphone.
-          </div>
-          <div class="rotateIcon">🔄📱</div>
-        </div>
-      </div>
+/* =========================
+   NAVIGATION
+========================= */
+function show(id){
+  document.querySelectorAll('.screen').forEach(s=>s.classList.remove('active'));
+  document.getElementById(id).classList.add('active');
+}
 
-      <div class="ui">
-        <div class="hud">
-          <div class="hudLeft">
-            <div class="hudTitle">CIVITAS: RUINES — <span style="color:var(--accent)">Axella</span> — Tour 1</div>
-            <div class="hudMeta">Préhistoire • Terre alternative • Fédération naissante • CIVITAS (impitoyable)</div>
-          </div>
+function startWizard(){
+  show('wizard');
+}
 
-          <div class="pills">
-            <div class="pill">👥 <b>120</b></div>
-            <div class="pill">🌾 <b>90</b></div>
-            <div class="pill">🪵 <b>70</b></div>
-            <div class="pill">🛡️ <b>35</b></div>
-            <div class="pill">⚖️ <b>62</b></div>
-          </div>
-        </div>
+function loadArchive(){
+  alert("Archives — à venir");
+}
 
-        <div class="content">
-          <div class="map">
-            <div class="mapBrand">Carte</div>
+/* =========================
+   START GAME
+========================= */
+function startGame(){
+  game={
+    seed:Math.floor(Math.random()*999999),
+    turn:1,
+    epoch:epoch.value,
+    world:world.value,
+    player:{
+      name:civName.value||"Civilisation sans nom",
+      population:120,
+      food:90,
+      materials:70,
+      influence:50,
+      cohesion:60
+    },
+    factions:generateFactions(),
+    map:generateMap(48,28),
+    log:[]
+  };
+  saveGame();
+  initGameUI();
+  show('game');
+}
 
-            <svg viewBox="0 0 100 100" preserveAspectRatio="none">
-              <defs>
-                <linearGradient id="land" x1="0" y1="0" x2="0" y2="1">
-                  <stop offset="0" stop-color="#2a2f3a"/>
-                  <stop offset="1" stop-color="#1a1f29"/>
-                </linearGradient>
-                <linearGradient id="ridge" x1="0" y1="0" x2="1" y2="1">
-                  <stop offset="0" stop-color="#3a4050"/>
-                  <stop offset="1" stop-color="#232836"/>
-                </linearGradient>
-                <linearGradient id="water" x1="0" y1="0" x2="0" y2="1">
-                  <stop offset="0" stop-color="#3b6f86"/>
-                  <stop offset="1" stop-color="#1f3f4c"/>
-                </linearGradient>
-                <filter id="s" x="-20%" y="-20%" width="140%" height="140%">
-                  <feDropShadow dx="0" dy="1" stdDeviation="1" flood-color="#000" flood-opacity=".45"/>
-                </filter>
-              </defs>
+/* =========================
+   MAP GENERATION
+========================= */
+function generateMap(w,h){
+  let hexes=[];
+  for(let r=0;r<h;r++){
+    for(let q=0;q<w;q++){
+      hexes.push({
+        q,r,
+        biome:["plaine","foret","montagne","eau"][Math.floor(Math.random()*4)],
+        seen:false
+      });
+    }
+  }
+  return {w,h,hexes};
+}
 
-              <rect x="0" y="0" width="100" height="100" fill="url(#land)"/>
-
-              <g opacity=".75">
-                <circle cx="20" cy="28" r="14" fill="#1c3843"/>
-                <circle cx="32" cy="40" r="18" fill="#223c47"/>
-                <circle cx="16" cy="64" r="18" fill="#1a313a"/>
-                <circle cx="78" cy="22" r="16" fill="#213a44"/>
-                <circle cx="90" cy="36" r="12" fill="#1d3440"/>
-              </g>
-
-              <g opacity=".9" filter="url(#s)">
-                <path d="M10,22 L20,8 L30,22 Z" fill="url(#ridge)"/>
-                <path d="M24,24 L36,9 L48,24 Z" fill="url(#ridge)"/>
-                <path d="M68,20 L78,7 L88,20 Z" fill="url(#ridge)"/>
-              </g>
-
-              <path d="M0,62 C18,55 30,70 48,62 C66,54 70,74 100,66"
-                    fill="none" stroke="url(#water)" stroke-width="4" opacity=".92"/>
-              <path d="M0,62 C18,55 30,70 48,62 C66,54 70,74 100,66"
-                    fill="none" stroke="rgba(255,255,255,.18)" stroke-width="1" opacity=".7"/>
-
-              <path d="M58,54 C52,48 45,44 36,42" fill="none" stroke="rgba(176,138,90,.70)" stroke-width="1.6"/>
-              <path d="M58,54 C64,58 76,64 90,72" fill="none" stroke="rgba(176,138,90,.70)" stroke-width="1.6"/>
-
-              <g filter="url(#s)">
-                <circle cx="58" cy="54" r="2.4" fill="#b08a5a"/>
-                <circle cx="58" cy="54" r="5.2" fill="rgba(176,138,90,.18)"/>
-                <text x="61" y="50" font-size="7"
-                      fill="rgba(232,230,223,.92)"
-                      stroke="rgba(0,0,0,.55)" stroke-width="2" paint-order="stroke">
-                  Axella
-                </text>
-              </g>
-
-              <path d="M12,85 C28,78 36,88 48,84 C63,78 72,88 90,82"
-                    fill="none" stroke="rgba(232,230,223,.18)" stroke-width="1.2" stroke-dasharray="4 4"/>
-            </svg>
-          </div>
-
-          <div class="panel">
-            <div class="block">
-              <div class="blockTitle">Camp</div>
-              <div class="blockBody">
-                <div><b>Axella</b> — camp principal, proche rivière</div>
-                <div class="kv"><span>Phase</span><span>FOUNDATION</span></div>
-                <div class="kv"><span>Organisation</span><span>Conseil fédéré</span></div>
-                <div class="tagRow">
-                  <div class="tag good">Cohésion</div>
-                  <div class="tag warn">Accidents</div>
-                  <div class="tag warn">Maladies</div>
-                  <div class="tag danger">Rumeurs à l’ouest</div>
-                </div>
-              </div>
-            </div>
-
-            <div class="block" style="flex:1; min-height:0;">
-              <div class="blockTitle">Chronique</div>
-              <div class="blockBody">
-                <div>Ainsi naquit la civilisation d’<b>Axella</b>.</div>
-                <div>Elle s’éleva dans un monde froid, vaste, indifférent.</div>
-                <div>Les réserves tiennent… mais un seul incident peut tout changer.</div>
-                <div>Au-delà des collines, d’autres groupes avancent déjà.</div>
-                <div>Le temps n’attend pas.</div>
-              </div>
-            </div>
-
-            <div class="block">
-              <div class="blockTitle">Rapport</div>
-              <div class="blockBody">
-                <div class="muted">Témoignage transcrit :</div>
-                <div>« Les pistes sont calmes près de la rivière. »</div>
-                <div>« Un feu mal éteint a failli embraser un abri. »</div>
-              </div>
-            </div>
-          </div>
-        </div>
-
-        <div class="actions">
-          <div class="action">
-            <div class="aTitle">Rassembler le conseil</div>
-            <div class="aDesc">Écouter, calmer, éviter la fracture.</div>
-            <div class="aRisk"><span class="riskDot low"></span>Risque faible</div>
-          </div>
-
-          <div class="action">
-            <div class="aTitle">Consolider les réserves</div>
-            <div class="aDesc">Nourriture, stockage, sécurité.</div>
-            <div class="aRisk"><span class="riskDot"></span>Risque moyen</div>
-          </div>
-
-          <div class="action">
-            <div class="aTitle">Envoyer des éclaireurs</div>
-            <div class="aDesc">Observer l’ouest, repérer menaces.</div>
-            <div class="aRisk"><span class="riskDot high"></span>Risque élevé</div>
-          </div>
-
-          <div class="action">
-            <div class="aTitle">Renforcer la garde</div>
-            <div class="aDesc">Protéger camp et routes.</div>
-            <div class="aRisk"><span class="riskDot"></span>Risque moyen</div>
-          </div>
-        </div>
-
-           </div> <!-- /ui -->
-    </div>   <!-- /board -->
-  </div>     <!-- /frame -->
-
-<script>
-  if ("serviceWorker" in navigator) {
-    window.addEventListener("load", () => {
-      navigator.serviceWorker.register("sw.js");
+/* =========================
+   FACTIONS
+========================= */
+function generateFactions(){
+  const names=["Khar","Ulren","Sava","Tyr","Oshen","Varak","Nemor"];
+  let list=[];
+  for(let i=0;i<6;i++){
+    list.push({
+      id:i,
+      name:names[Math.floor(Math.random()*names.length)]+"a",
+      power:Math.floor(Math.random()*50)+30,
+      relation:"unknown"
     });
   }
+  return list;
+}
+
+/* =========================
+   UI INIT
+========================= */
+function initGameUI(){
+  document.getElementById('hud').innerText=
+    `${game.player.name} — Tour ${game.turn} — ${game.epoch}`;
+
+  drawMap();
+  renderActions();
+}
+
+/* =========================
+   DRAW MAP
+========================= */
+function drawMap(){
+  const canvas=document.getElementById('mapCanvas');
+  const ctx=canvas.getContext('2d');
+  canvas.width=canvas.clientWidth;
+  canvas.height=canvas.clientHeight;
+
+  const size=12;
+  game.map.hexes.forEach(h=>{
+    const x = h.q*size*1.5+20;
+    const y = h.r*size*Math.sqrt(3)+(h.q%2?size*Math.sqrt(3)/2:0)+20;
+    ctx.beginPath();
+    for(let i=0;i<6;i++){
+      const a=Math.PI/3*i;
+      ctx.lineTo(x+size*Math.cos(a),y+size*Math.sin(a));
+    }
+    ctx.closePath();
+    ctx.strokeStyle="#2b2418";
+    ctx.stroke();
+  });
+}
+
+/* =========================
+   ACTIONS
+========================= */
+function renderActions(){
+  const box=document.getElementById('actions');
+  box.innerHTML="";
+  const actions=[
+    {t:"Rassembler le conseil",r:"faible"},
+    {t:"Consolider les réserves",r:"moyen"},
+    {t:"Envoyer des éclaireurs",r:"élevé"},
+    {t:"Renforcer la garde",r:"moyen"}
+  ];
+  actions.forEach(a=>{
+    const d=document.createElement('div');
+    d.className="action";
+    d.innerHTML=`<b>${a.t}</b><br>Risque ${a.r}`;
+    box.appendChild(d);
+  });
+}
+
+/* =========================
+   SAVE
+========================= */
+function saveGame(){
+  localStorage.setItem("civitas_save",JSON.stringify(game));
+}
 </script>
-  
+
 </body>
 </html>
