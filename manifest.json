@@ -4,8 +4,8 @@
   "start_url": "./",
   "scope": "./",
   "display": "standalone",
-  "background_color": "#0f1115",
-  "theme_color": "#0f1115",
+  "background_color": "#efe7d3",
+  "theme_color": "#2a2418",
   "orientation": "landscape",
   "description": "Jeu de stratégie narratif à choix, tours et rapports immersifs selon l'époque.",
   "icons": [
