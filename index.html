@@ -4,109 +4,138 @@
 <meta charset="UTF-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover" />
 <title>CIVITAS: RUINES</title>
+
 <style>
   :root{
-    --ink:#261a10;
-    --paper1:#f6e9cf;
-    --paper2:#e6d1a6;
-    --ui:#1f1a14;
-    --ui2:#2a231b;
-    --uiText:#f3ead4;
-    --soft:rgba(255,255,255,.14);
-    --line:rgba(255,255,255,.12);
-    --shadow:rgba(0,0,0,.55);
-    --accent:#d7c08f;
-    --danger:#c4583a;
+    /* Option B: stratégique immersive */
+    --bg0:#07090d;
+    --bg1:#0f1115;
+    --bg2:#141822;
+
+    --panel0: rgba(18, 22, 30, .86);
+    --panel1: rgba(24, 29, 40, .78);
+    --panelBorder: rgba(255,255,255,.10);
+
+    --text:#e8e6df;
+    --muted: rgba(232,230,223,.72);
+
+    --accent:#b08a5a;      /* cuivre */
+    --good:#3f7a5a;        /* vert éteint */
+    --warn:#8b6a2f;        /* ocre */
+    --danger:#8b3a3a;      /* rouge éteint */
+    --line: rgba(255,255,255,.12);
+
+    --shadow: rgba(0,0,0,.55);
   }
 
   *{ box-sizing:border-box; }
-  html,body{ height:100%; }
+  html, body { height:100%; }
   body{
     margin:0;
-    overflow:hidden; /* ✅ PAS DE SCROLL */
+    overflow:hidden; /* ✅ jamais de scroll */
     font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,Arial,sans-serif;
-    background:#000;
+    color: var(--text);
+    background:
+      radial-gradient(1200px 800px at 20% 20%, rgba(255,255,255,.06), transparent 60%),
+      radial-gradient(900px 700px at 80% 30%, rgba(255,255,255,.04), transparent 62%),
+      radial-gradient(1400px 900px at 50% 95%, rgba(0,0,0,.35), rgba(0,0,0,.92)),
+      linear-gradient(180deg, var(--bg1), var(--bg0));
   }
 
-  /* ===== BACKGROUND “CIV” ===== */
-  .bg{
+  /* Overlay de texture légère */
+  body::before{
+    content:"";
     position:fixed; inset:0;
     background:
-      radial-gradient(900px 600px at 18% 22%, rgba(255,255,255,.08), transparent 60%),
-      radial-gradient(860px 580px at 84% 28%, rgba(255,255,255,.06), transparent 62%),
-      radial-gradient(1200px 900px at 50% 88%, rgba(0,0,0,.35), rgba(0,0,0,.92)),
-      repeating-linear-gradient(90deg, rgba(255,255,255,.045) 0 16px, rgba(0,0,0,0) 16px 34px),
-      linear-gradient(180deg,#0f0f0f,#050505);
-    filter:saturate(1.05);
-  }
-  /* “mini silhouettes” très légères pour donner vie */
-  .bg::after{
-    content:"";
-    position:absolute; inset:0;
-    background:
-      radial-gradient(closest-side at 20% 55%, rgba(140,200,120,.10), transparent 60%),
-      radial-gradient(closest-side at 75% 48%, rgba(90,170,200,.10), transparent 62%),
-      radial-gradient(closest-side at 55% 68%, rgba(210,190,120,.12), transparent 66%);
-    opacity:.9;
-    filter:blur(2px);
-  }
-
-  /* ===== PARCHEMIN ===== */
-  .frame{
-    position:relative;
-    height:100%;
-    display:flex;
-    align-items:center;
-    justify-content:center;
-    padding: max(10px, env(safe-area-inset-top)) 10px max(10px, env(safe-area-inset-bottom));
-  }
-
-  .parchment{
-    width:min(980px, 96vw);
-    height:min(860px, 96vh);
-    border-radius:18px;
-    background: linear-gradient(135deg, var(--paper1), var(--paper2));
-    box-shadow: 0 30px 80px var(--shadow);
-    border:1px solid rgba(0,0,0,.18);
-    overflow:hidden; /* ✅ aucun scroll interne */
-    position:relative;
-  }
-  .parchment::before{
-    content:"";
-    position:absolute; inset:-22px;
-    background:
-      repeating-linear-gradient(0deg, rgba(0,0,0,.03) 0 1px, transparent 1px 5px),
-      radial-gradient(circle at 18% 22%, rgba(0,0,0,.08), transparent 55%),
-      radial-gradient(circle at 82% 76%, rgba(0,0,0,.06), transparent 58%);
-    opacity:.72;
-    mix-blend-mode:multiply;
+      repeating-linear-gradient(0deg, rgba(255,255,255,.02) 0 1px, transparent 1px 5px),
+      radial-gradient(circle at 30% 30%, rgba(176,138,90,.08), transparent 55%),
+      radial-gradient(circle at 70% 65%, rgba(90,160,200,.06), transparent 60%);
+    opacity:.8;
     pointer-events:none;
   }
 
-  /* ===== LAYOUT ÉCRAN FIXE ===== */
-  .ui{
+  /* Frame */
+  .frame{
     position:relative;
     height:100%;
+    padding: max(10px, env(safe-area-inset-top)) 10px max(10px, env(safe-area-inset-bottom));
+    display:flex;
+    align-items:center;
+    justify-content:center;
+  }
+
+  /* “Plateau” du jeu */
+  .board{
+    width:min(1200px, 96vw);
+    height:min(860px, 96vh);
+    border-radius:18px;
+    background:
+      radial-gradient(1200px 700px at 30% 20%, rgba(255,255,255,.04), transparent 60%),
+      linear-gradient(180deg, rgba(255,255,255,.04), rgba(0,0,0,.10));
+    box-shadow: 0 28px 90px var(--shadow);
+    border: 1px solid rgba(255,255,255,.10);
+    overflow:hidden;
+    position:relative;
+  }
+
+  /* Layout global: HUD / contenu / actions */
+  .ui{
+    position:absolute; inset:0;
     display:grid;
-    grid-template-rows: auto 1fr auto; /* HUD / corps / actions */
+    grid-template-rows: auto 1fr auto;
     gap:10px;
     padding:12px;
   }
 
-  /* HUD “CIV-LIKE” */
+  /* === Screen “rotate” si portrait === */
+  .rotate{
+    position:absolute; inset:0;
+    display:none;
+    align-items:center; justify-content:center;
+    background: rgba(0,0,0,.75);
+    backdrop-filter: blur(8px);
+    z-index:50;
+    padding:18px;
+    text-align:center;
+  }
+  .rotateCard{
+    width:min(520px, 92vw);
+    border:1px solid rgba(255,255,255,.14);
+    background: linear-gradient(180deg, rgba(18,22,30,.90), rgba(18,22,30,.70));
+    border-radius:16px;
+    padding:16px;
+  }
+  .rotateTitle{
+    font-weight:900;
+    letter-spacing:.08em;
+    text-transform:uppercase;
+    color: var(--text);
+  }
+  .rotateBody{ margin-top:10px; color: var(--muted); line-height:1.3; }
+  .rotateIcon{ font-size:32px; margin:12px 0 0; }
+
+  @media (orientation: portrait){
+    .rotate{ display:flex; }
+  }
+
+  /* === HUD TOP === */
   .hud{
-    background: linear-gradient(180deg, rgba(31,26,20,.92), rgba(31,26,20,.74));
-    color: var(--uiText);
-    border:1px solid var(--line);
     border-radius:14px;
+    border: 1px solid var(--panelBorder);
+    background: linear-gradient(180deg, var(--panel0), var(--panel1));
+    backdrop-filter: blur(6px);
     padding:10px 12px;
     display:flex;
     align-items:center;
     justify-content:space-between;
     gap:10px;
-    backdrop-filter: blur(6px);
   }
-  .hudLeft{ display:flex; flex-direction:column; gap:2px; min-width:0; }
+  .hudLeft{
+    display:flex;
+    flex-direction:column;
+    gap:2px;
+    min-width:0;
+  }
   .hudTitle{
     font-weight:900;
     letter-spacing:.03em;
@@ -116,61 +145,82 @@
   }
   .hudMeta{
     font-size:12px;
-    opacity:.82;
+    color: var(--muted);
     white-space:nowrap;
     overflow:hidden;
     text-overflow:ellipsis;
   }
-  .pills{ display:flex; gap:8px; flex-wrap:wrap; justify-content:flex-end; }
+  .pills{
+    display:flex;
+    gap:8px;
+    flex-wrap:wrap;
+    justify-content:flex-end;
+  }
   .pill{
     font-size:12px;
     padding:7px 10px;
     border-radius:999px;
     border:1px solid rgba(255,255,255,.12);
-    background:rgba(255,255,255,.10);
+    background: rgba(255,255,255,.06);
     white-space:nowrap;
   }
+  .pill b{ color: var(--accent); font-weight:900; }
 
-  /* Corps : carte + panneau */
-  .body{
+  /* === CONTENT === */
+  .content{
     display:grid;
-    grid-template-columns: 1.4fr 0.9fr; /* carte plus large */
+    grid-template-columns: 1.45fr 0.85fr; /* carte / panneau */
     gap:10px;
-    min-height:0; /* important pour éviter débordement */
+    min-height:0;
   }
-  @media (max-width: 820px){
-    .body{ grid-template-columns: 1fr; }
+  @media (max-width: 900px){
+    .content{ grid-template-columns: 1.25fr 0.95fr; }
   }
 
-  /* Carte (stylisée, pas d’assets) */
+  /* Map */
   .map{
     border-radius:14px;
+    border:1px solid rgba(255,255,255,.10);
     overflow:hidden;
-    border:1px solid rgba(0,0,0,.16);
-    box-shadow: inset 0 0 0 1px rgba(255,255,255,.10);
     position:relative;
     background:
-      radial-gradient(900px 500px at 20% 30%, rgba(255,255,255,.16), transparent 60%),
-      linear-gradient(180deg, rgba(0,0,0,.12), rgba(0,0,0,.26));
+      radial-gradient(900px 600px at 18% 22%, rgba(255,255,255,.08), transparent 58%),
+      linear-gradient(180deg, rgba(0,0,0,.10), rgba(0,0,0,.35));
   }
   .map svg{ width:100%; height:100%; display:block; }
 
-  /* Panneau droit */
+  .mapBrand{
+    position:absolute;
+    top:10px; left:10px;
+    padding:8px 10px;
+    border-radius:12px;
+    border:1px solid rgba(255,255,255,.12);
+    background: rgba(0,0,0,.25);
+    backdrop-filter: blur(6px);
+    font-weight:900;
+    letter-spacing:.06em;
+    text-transform:uppercase;
+    font-size:12px;
+    color: var(--text);
+  }
+
+  /* Right panel */
   .panel{
     border-radius:14px;
-    background: linear-gradient(180deg, rgba(31,26,20,.92), rgba(31,26,20,.78));
-    border:1px solid var(--line);
-    color:var(--uiText);
+    border: 1px solid var(--panelBorder);
+    background: linear-gradient(180deg, var(--panel0), var(--panel1));
+    backdrop-filter: blur(6px);
     padding:10px;
     display:flex;
     flex-direction:column;
     gap:10px;
     min-height:0;
   }
+
   .block{
-    background: rgba(255,255,255,.06);
-    border:1px solid rgba(255,255,255,.10);
     border-radius:12px;
+    border: 1px solid rgba(255,255,255,.10);
+    background: rgba(255,255,255,.05);
     padding:10px;
   }
   .blockTitle{
@@ -178,224 +228,88 @@
     letter-spacing:.08em;
     text-transform:uppercase;
     font-size:12px;
-    opacity:.92;
+    color: rgba(232,230,223,.90);
   }
   .blockBody{
     margin-top:8px;
     font-size:13px;
     line-height:1.25;
-    opacity:.92;
+    color: rgba(232,230,223,.88);
   }
-  .muted{ opacity:.82; }
+  .kv{
+    display:flex;
+    justify-content:space-between;
+    gap:10px;
+    font-size:12px;
+    color: var(--muted);
+    margin-top:6px;
+  }
+  .kv span:last-child{ color: rgba(232,230,223,.86); }
 
-  /* Barre d’actions bottom */
+  .tagRow{
+    display:flex;
+    gap:8px;
+    flex-wrap:wrap;
+    margin-top:8px;
+  }
+  .tag{
+    font-size:11px;
+    padding:6px 8px;
+    border-radius:999px;
+    border:1px solid rgba(255,255,255,.10);
+    background: rgba(255,255,255,.06);
+    color: rgba(232,230,223,.85);
+  }
+  .tag.good{ border-color: rgba(63,122,90,.35); color: rgba(160,220,190,.95); }
+  .tag.warn{ border-color: rgba(139,106,47,.35); color: rgba(230,200,140,.95); }
+  .tag.danger{ border-color: rgba(139,58,58,.35); color: rgba(240,170,170,.95); }
+
+  /* === ACTION BAR === */
   .actions{
     border-radius:14px;
-    background: linear-gradient(180deg, rgba(31,26,20,.58), rgba(31,26,20,.92));
-    border:1px solid var(--line);
+    border: 1px solid var(--panelBorder);
+    background: linear-gradient(180deg, rgba(18,22,30,.62), rgba(18,22,30,.92));
+    backdrop-filter: blur(6px);
     padding:10px;
     display:grid;
-    grid-template-columns: repeat(4, 1fr); /* 4 actions visibles */
+    grid-template-columns: repeat(4, 1fr);
     gap:10px;
   }
-  @media (max-width: 820px){
-    .actions{ grid-template-columns: repeat(2, 1fr); }
-  }
 
-  .actionBtn{
+  .action{
     border-radius:12px;
     border:1px solid rgba(255,255,255,.12);
-    background: rgba(255,255,255,.08);
-    color: var(--uiText);
+    background: rgba(255,255,255,.06);
     padding:10px;
-    height:64px;
+    height:70px;
     display:flex;
     flex-direction:column;
     justify-content:center;
     gap:4px;
-    text-align:left;
   }
-  .aTitle{ font-weight:900; font-size:13px; }
-  .aDesc{ font-size:11px; opacity:.82; }
-
-  .risk{
-    margin-top:6px;
+  .aTitle{
+    font-weight:900;
+    font-size:13px;
+    color: rgba(232,230,223,.95);
+  }
+  .aDesc{
     font-size:11px;
-    color: rgba(255,180,160,.95);
+    color: var(--muted);
+    white-space:nowrap;
+    overflow:hidden;
+    text-overflow:ellipsis;
   }
-
-  /* Petit logo manuscrit en haut de la carte */
-  .mapBrand{
-    position:absolute;
-    top:10px; left:12px;
-    padding:8px 10px;
-    border-radius:12px;
-    background:rgba(0,0,0,.28);
-    border:1px solid rgba(255,255,255,.12);
-    color:#f3ead4;
-    font-family:"Snell Roundhand","Apple Chancery","Bradley Hand","Segoe Script",cursive;
-    font-size:22px;
-    letter-spacing:.02em;
-    backdrop-filter: blur(6px);
+  .aRisk{
+    font-size:11px;
+    margin-top:2px;
+    color: rgba(232,230,223,.85);
   }
-</style>
-</head>
-
-<body>
-  <div class="bg"></div>
-
-  <div class="frame">
-    <div class="parchment">
-      <div class="ui">
-
-        <!-- HUD -->
-        <div class="hud">
-          <div class="hudLeft">
-            <div class="hudTitle">CLAN TOUROUK — Tour 1</div>
-            <div class="hudMeta">Préhistoire • Terre alternative • Clan/tribu • CIVITAS (impitoyable)</div>
-          </div>
-
-          <div class="pills">
-            <div class="pill">👥 120</div>
-            <div class="pill">🌾 90</div>
-            <div class="pill">🪵 70</div>
-            <div class="pill">🛡️ 35</div>
-            <div class="pill">⚖️ 62</div>
-          </div>
-        </div>
-
-        <!-- CORPS -->
-        <div class="body">
-
-          <!-- MAP -->
-          <div class="map">
-            <div class="mapBrand">Civitas</div>
-
-            <!-- carte stylisée (SVG) -->
-            <svg viewBox="0 0 100 100" preserveAspectRatio="none">
-              <defs>
-                <linearGradient id="land" x1="0" y1="0" x2="0" y2="1">
-                  <stop offset="0" stop-color="#78aa6a"/>
-                  <stop offset="1" stop-color="#4f7c4f"/>
-                </linearGradient>
-                <linearGradient id="hill" x1="0" y1="0" x2="1" y2="1">
-                  <stop offset="0" stop-color="#9aa07a"/>
-                  <stop offset="1" stop-color="#6e7656"/>
-                </linearGradient>
-                <linearGradient id="water" x1="0" y1="0" x2="0" y2="1">
-                  <stop offset="0" stop-color="#4db7c9"/>
-                  <stop offset="1" stop-color="#1e6f86"/>
-                </linearGradient>
-                <filter id="softShadow" x="-20%" y="-20%" width="140%" height="140%">
-                  <feDropShadow dx="0" dy="1" stdDeviation="1" flood-color="#000" flood-opacity=".35"/>
-                </filter>
-              </defs>
-
-              <rect x="0" y="0" width="100" height="100" fill="url(#land)"/>
-
-              <!-- forêts -->
-              <g opacity=".75">
-                <circle cx="18" cy="35" r="11" fill="#2f5f3a"/>
-                <circle cx="30" cy="38" r="13" fill="#2d5b37"/>
-                <circle cx="15" cy="60" r="14" fill="#2b5634"/>
-                <circle cx="78" cy="22" r="14" fill="#2d5b37"/>
-                <circle cx="90" cy="32" r="10" fill="#2f5f3a"/>
-              </g>
-
-              <!-- montagnes -->
-              <g opacity=".9" filter="url(#softShadow)">
-                <path d="M10,18 L18,6 L26,18 Z" fill="url(#hill)"/>
-                <path d="M22,20 L32,7 L42,20 Z" fill="url(#hill)"/>
-                <path d="M70,18 L78,6 L86,18 Z" fill="url(#hill)"/>
-              </g>
-
-              <!-- rivière -->
-              <path d="M0,62 C20,55 30,70 48,62 C65,54 70,74 100,66"
-                    fill="none" stroke="url(#water)" stroke-width="4" opacity=".9"/>
-              <path d="M0,62 C20,55 30,70 48,62 C65,54 70,74 100,66"
-                    fill="none" stroke="rgba(255,255,255,.35)" stroke-width="1" opacity=".6"/>
-
-              <!-- routes -->
-              <path d="M60,54 C52,48 45,44 36,42" fill="none" stroke="rgba(236,216,170,.85)" stroke-width="1.6"/>
-              <path d="M60,54 C64,58 76,64 90,72" fill="none" stroke="rgba(236,216,170,.85)" stroke-width="1.6"/>
-
-              <!-- camp / ville -->
-              <g filter="url(#softShadow)">
-                <circle cx="60" cy="54" r="2.4" fill="#b44a3a"/>
-                <circle cx="60" cy="54" r="4.8" fill="rgba(180,74,58,.25)"/>
-                <text x="63" y="50" font-size="7" fill="rgba(20,16,12,.92)" stroke="rgba(255,255,255,.65)" stroke-width="2" paint-order="stroke">Camp d’Axella</text>
-              </g>
-
-              <!-- “frontière” -->
-              <path d="M12,85 C28,78 36,88 48,84 C63,78 72,88 90,82"
-                    fill="none" stroke="rgba(255,255,255,.22)" stroke-width="1.2" stroke-dasharray="4 4"/>
-            </svg>
-          </div>
-
-          <!-- PANEL -->
-          <div class="panel">
-            <div class="block">
-              <div class="blockTitle">Camp</div>
-              <div class="blockBody">
-                <div><b>Camp d’Axella</b> (rivière proche)</div>
-                <div class="muted" style="margin-top:6px;">Forces : cohésion, chasse, feu</div>
-                <div class="muted">Faiblesses : maladies, accidents, routes incertaines</div>
-                <div class="muted">Phase : FOUNDATION</div>
-              </div>
-            </div>
-
-            <div class="block" style="flex:1; min-height:0;">
-              <div class="blockTitle">Chronique</div>
-              <div class="blockBody">
-                <div>Ainsi naquit la civilisation de <b>Clan Tourouk</b>.</div>
-                <div>Elle s’éleva dans un monde qui ne promettait rien.</div>
-                <div>Une opportunité se distinguait : des terres de chasse abondantes.</div>
-                <div>Au-delà de ses terres, d’autres puissances existaient déjà.</div>
-                <div>Et le temps, lui, n’attend jamais.</div>
-              </div>
-            </div>
-
-            <div class="block">
-              <div class="blockTitle">Rapport</div>
-              <div class="blockBody">
-                <div>Témoignage transcrit :</div>
-                <div class="muted">« La situation paraît stable… pour l’instant. »</div>
-                <div class="muted">« Des rumeurs circulent à l’ouest. »</div>
-              </div>
-            </div>
-          </div>
-
-        </div>
-
-        <!-- ACTIONS -->
-        <div class="actions">
-          <div class="actionBtn">
-            <div class="aTitle">Rassembler le conseil</div>
-            <div class="aDesc">Écouter, calmer, éviter les fractures.</div>
-            <div class="risk">Risque : tensions internes</div>
-          </div>
-
-          <div class="actionBtn">
-            <div class="aTitle">Consolider les réserves</div>
-            <div class="aDesc">Stabiliser la nourriture, limiter les ruptures.</div>
-            <div class="risk">Risque : pénurie si mal géré</div>
-          </div>
-
-          <div class="actionBtn">
-            <div class="aTitle">Envoyer des éclaireurs</div>
-            <div class="aDesc">Observer les voisins et repérer les menaces.</div>
-            <div class="risk">Risque : perte ou capture</div>
-          </div>
-
-          <div class="actionBtn">
-            <div class="aTitle">Renforcer la garde</div>
-            <div class="aDesc">Protéger routes et campements.</div>
-            <div class="risk">Risque : fatigue, coût humain</div>
-          </div>
-        </div>
-
-      </div>
-    </div>
-  </div>
-</body>
-</html>
+  .riskDot{
+    display:inline-block;
+    width:8px; height:8px;
+    border-radius:999px;
+    margin-right:6px;
+    transform: translateY(1px);
+    background: var(--warn);
+  }
+  .riskDot.high
