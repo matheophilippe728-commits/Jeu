@@ -1,824 +1,124 @@
 <!DOCTYPE html>
 <html lang="fr">
 <head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
-<title>CIVITAS</title>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover" />
+  <title>CIVITAS</title>
 
-<link rel="manifest" href="manifest.json">
-<meta name="theme-color" content="#2a2418">
-<meta name="apple-mobile-web-app-capable" content="yes">
-<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+  <link rel="manifest" href="manifest.json">
+  <meta name="theme-color" content="#2a2418">
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+  <link rel="apple-touch-icon" href="icons/icon-192.png">
 
-<style>
-:root{
-  --paper:#efe7d3;
-  --ink:#2b2418;
-  --muted:#6f6652;
-  --accent:#8a6a3f;
-  --danger:#7a2e2e;
-  --good:#4f6b4f;
-}
-
-*{box-sizing:border-box}
-html,body{height:100%;margin:0}
-body{
-  font-family: Georgia, serif;
-  background:
-    radial-gradient(1200px 800px at 30% 20%, #f6f0e3, transparent 60%),
-    linear-gradient(#e9dfc6,#d8ccb0);
-  color:var(--ink);
-  overflow:hidden;
-}
-
-.screen{
-  position:absolute; inset:0;
-  display:none;
-  padding:16px;
-}
-.screen.active{display:block}
-
-/* HOME */
-#home{
-  display:flex;
-  flex-direction:column;
-  justify-content:center;
-  align-items:center;
-  gap:18px;
-  text-align:center;
-}
-#title{
-  font-size:44px;
-  letter-spacing:6px;
-}
-.menuBtn{
-  padding:14px 26px;
-  font-size:18px;
-  background:var(--paper);
-  border:2px solid var(--ink);
-  color:var(--ink);
-  cursor:pointer;
-}
-
-/* WIZARD */
-#wizard{
-  max-width:720px;
-  margin:0 auto;
-}
-.step{margin-bottom:18px;}
-.step h2{margin:0 0 8px;}
-select,input{
-  width:100%;
-  padding:10px;
-  font-size:16px;
-  border:2px solid var(--ink);
-  background:var(--paper);
-  color:var(--ink);
-}
-.small{font-size:12px;color:var(--muted);}
-
-/* GAME UI */
-#game{
-  display:grid;
-  grid-template-columns: 1fr 340px;
-  grid-template-rows: auto 1fr auto;
-  gap:8px;
-  height:100%;
-}
-
-#hud{
-  grid-column:1/3;
-  padding:10px;
-  border:2px solid var(--ink);
-  background:rgba(239,231,211,.85);
-  display:flex;
-  gap:12px;
-  align-items:center;
-  justify-content:space-between;
-}
-
-.hudLeft{min-width:0;}
-.hudTitle{
-  font-weight:700;
-  font-size:16px;
-  white-space:nowrap;
-  overflow:hidden;
-  text-overflow:ellipsis;
-}
-.hudMeta{
-  font-size:12px;
-  color:var(--muted);
-  margin-top:2px;
-  white-space:nowrap;
-  overflow:hidden;
-  text-overflow:ellipsis;
-}
-.pills{display:flex; gap:8px; flex-wrap:wrap; justify-content:flex-end;}
-.pill{
-  border:1px solid var(--ink);
-  background:rgba(239,231,211,.9);
-  padding:6px 8px;
-  font-size:12px;
-  white-space:nowrap;
-}
-.pill b{color:var(--accent);}
-
-#map{
-  border:2px solid var(--ink);
-  background:
-    radial-gradient(700px 500px at 30% 25%, rgba(255,255,255,.45), transparent 60%),
-    linear-gradient(#e6dcc2,#d3c5a8);
-  position:relative;
-  overflow:hidden;
-  touch-action:none; /* pan/zoom */
-}
-#mapTopHint{
-  position:absolute;
-  top:10px; left:10px;
-  border:1px solid var(--ink);
-  background:rgba(239,231,211,.85);
-  padding:6px 8px;
-  font-size:12px;
-  z-index:2;
-}
-
-#side{
-  border:2px solid var(--ink);
-  background:rgba(239,231,211,.80);
-  padding:10px;
-  overflow:auto;
-}
-
-.block{
-  border:1px solid var(--ink);
-  background:rgba(239,231,211,.88);
-  padding:10px;
-  margin-bottom:10px;
-}
-.blockTitle{
-  font-weight:700;
-  font-size:12px;
-  letter-spacing:.08em;
-  text-transform:uppercase;
-  margin-bottom:8px;
-}
-
-#actions{
-  grid-column:1/3;
-  display:grid;
-  grid-template-columns:repeat(4,1fr);
-  gap:8px;
-  padding:8px;
-  border:2px solid var(--ink);
-  background:rgba(239,231,211,.85);
-}
-
-.action{
-  border:1px solid var(--ink);
-  background:var(--paper);
-  padding:8px;
-  font-size:13px;
-  cursor:pointer;
-}
-.action .risk{margin-top:6px; font-size:12px;}
-.riskDot{display:inline-block; width:8px; height:8px; border-radius:999px; margin-right:6px; transform:translateY(1px); background:var(--accent);}
-.riskDot.low{background:var(--good);}
-.riskDot.high{background:var(--danger);}
-
-canvas{width:100%; height:100%; display:block;}
-</style>
+  <link rel="stylesheet" href="style.css?v=1">
 </head>
 
 <body>
+  <!-- HOME -->
+  <main id="screen-home" class="screen active" aria-label="Accueil">
+    <div class="parchment">
+      <div class="hero">
+        <div class="title">CIVITAS</div>
+        <div class="subtitle">Ruines</div>
+        <div class="hint">Prototype • PWA • Carte hex + CivilWar inside</div>
+      </div>
 
-<!-- HOME -->
-<div id="home" class="screen active">
-  <div id="title">CIVITAS</div>
-  <div class="small">Prototype V1 — Carte hex interactive</div>
-  <button class="menuBtn" id="btnNew">Créer civilisation</button>
-  <button class="menuBtn" id="btnArchives">Archives</button>
-</div>
+      <div class="menu">
+        <button id="btn-new" class="btn primary">Créer civilisation</button>
+        <button id="btn-archives" class="btn">Archives</button>
+      </div>
 
-<!-- WIZARD -->
-<div id="wizard" class="screen">
-  <div class="step">
-    <h2>A — Époque</h2>
-    <select id="epoch">
-      <option value="prehistoire">Préhistoire</option>
-      <option value="antiquite">Antiquité</option>
-      <option value="medieval">Médiéval</option>
-      <option value="industriel">Industriel</option>
-      <option value="moderne">Moderne</option>
-      <option value="futur">Futur</option>
-    </select>
-  </div>
-
-  <div class="step">
-    <h2>B — Monde</h2>
-    <select id="world">
-      <option value="continent">Terre alternative</option>
-      <option value="archipel">Archipel</option>
-      <option value="supercontinent">Supercontinent</option>
-      <option value="deuxcontinents">Deux continents</option>
-      <option value="fracture">Monde fracturé</option>
-    </select>
-  </div>
-
-  <div class="step">
-    <h2>C — Civilisation</h2>
-    <input id="civName" placeholder="Nom de votre civilisation">
-    <div class="small">Laisse vide → un nom par défaut sera utilisé.</div>
-  </div>
-
-  <div class="step">
-    <h2>D — Difficulté</h2>
-    <div><b>IMPITOYABLE</b> (modèle universel)</div>
-    <div class="small">Actions jamais sûres • Monde vivant • Chocs majeurs imprévus</div>
-  </div>
-
-  <button class="menuBtn" id="btnFound">E — Fonder</button>
-  <div style="height:10px"></div>
-  <button class="menuBtn" id="btnBackHome">Retour</button>
-</div>
-
-<!-- GAME -->
-<div id="game" class="screen">
-  <div id="hud"></div>
-
-  <div id="map">
-    <div id="mapTopHint">Glisser = déplacer • Pincer = zoom • Tap/clic = sélectionner</div>
-    <canvas id="mapCanvas"></canvas>
-  </div>
-
-  <div id="side"></div>
-  <div id="actions"></div>
-</div>
-
-<script>
-/* ===== Debug simple (visible dans Console) ===== */
-window.addEventListener("error", (e)=>console.log("JS ERROR:", e.message));
-
-/* =========================
-   STATE
-========================= */
-let game = null;
-const cam = { x: 0, y: 0, scale: 1.0 };
-let selectedHexId = null;
-
-let canvas, ctx;
-let pointers = new Map(); // pointerId -> {x,y}
-let lastPan = null;
-let needsRedraw = true;
-
-// hex geometry
-const HEX = { size: 18, sqrt3: Math.sqrt(3) };
-
-/* =========================
-   NAV
-========================= */
-function show(id){
-  document.querySelectorAll('.screen').forEach(s=>s.classList.remove('active'));
-  document.getElementById(id).classList.add('active');
-}
-function escapeHtml(s){
-  return String(s).replace(/[&<>"']/g, m => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#039;'}[m]));
-}
-
-function labelEpoch(v){
-  return ({
-    prehistoire:"Préhistoire", antiquite:"Antiquité", medieval:"Médiéval",
-    industriel:"Industriel", moderne:"Moderne", futur:"Futur"
-  })[v] || v;
-}
-function labelWorld(v){
-  return ({
-    continent:"Terre alternative", archipel:"Archipel", supercontinent:"Supercontinent",
-    deuxcontinents:"Deux continents", fracture:"Monde fracturé"
-  })[v] || v;
-}
-function labelBiome(b){
-  return ({plaine:"Plaine", foret:"Forêt", montagne:"Montagne", eau:"Eau"})[b] || b;
-}
-function biomeColor(b){
-  // encre/parchemin
-  if(b==="eau") return "rgba(70,110,130,0.30)";
-  if(b==="montagne") return "rgba(90,85,80,0.25)";
-  if(b==="foret") return "rgba(80,110,85,0.22)";
-  return "rgba(210,190,150,0.22)"; // plaine
-}
-function biomeFlavor(b, epoch){
-  const e = labelEpoch(epoch);
-  if(b==="eau") return `À l’époque <b>${e}</b>, l’eau dicte les routes : pêche, traversées, risques.`;
-  if(b==="montagne") return `Les hauteurs protègent et isolent. Le froid et la pierre testent les hommes.`;
-  if(b==="foret") return `Bois, bêtes, ombres. Nourricière, mais propice aux disparitions.`;
-  return `Terres ouvertes. Faciles à occuper… et faciles à perdre.`;
-}
-
-/* =========================
-   RNG
-========================= */
-function mulberry32(a){
-  return function(){
-    let t = a += 0x6D2B79F5;
-    t = Math.imul(t ^ (t >>> 15), t | 1);
-    t ^= t + Math.imul(t ^ (t >>> 7), t | 61);
-    return ((t ^ (t >>> 14)) >>> 0) / 4294967296;
-  }
-}
-
-/* =========================
-   GENERATION
-========================= */
-function generateMap(w,h, seed){
-  const rng = mulberry32(seed);
-  const hexes = [];
-  let id=0;
-  for(let r=0;r<h;r++){
-    for(let q=0;q<w;q++){
-      const roll = rng();
-      const biome = roll < 0.14 ? "eau"
-                 : roll < 0.40 ? "foret"
-                 : roll < 0.62 ? "plaine"
-                 : "montagne";
-      hexes.push({ id:id++, q,r, biome, seen:false, ownerId:null, poi:null });
-    }
-  }
-  return { w,h,hexes };
-}
-function getHexByQR(q,r){
-  if(!game) return null;
-  if(q<0||r<0||q>=game.map.w||r>=game.map.h) return null;
-  return game.map.hexes[r*game.map.w + q];
-}
-function randomSuffix(){
-  const s=["a","en","ir","os","um","ka","eth","al","un"];
-  return s[Math.floor(Math.random()*s.length)];
-}
-function generateFactions(n){
-  const base=["Khar","Ulren","Sava","Tyr","Oshen","Varak","Nemor","Axa","Doru","Mara","Kesa","Uru"];
-  const list=[];
-  for(let i=0;i<n;i++){
-    list.push({ id:"F"+i, name: base[Math.floor(Math.random()*base.length)] + randomSuffix(), relationStatus:"unknown" });
-  }
-  return list;
-}
-function generateCapitalName(seed){
-  const a=["Axe","Oru","Kara","Sile","Noma","Ula","Tera","Dene","Vara","Kora"];
-  const b=["lla","th","na","dor","m","ra","lia","sen","kar","vel"];
-  return a[seed % a.length] + b[(seed*7) % b.length];
-}
-
-/* =========================
-   SAVE/LOAD
-========================= */
-function saveGame(){
-  localStorage.setItem("civitas_save", JSON.stringify(game));
-}
-function loadGame(){
-  const raw = localStorage.getItem("civitas_save");
-  if(!raw) return null;
-  try { return JSON.parse(raw); } catch { return null; }
-}
-
-/* =========================
-   START FLOW
-========================= */
-function startWizard(){ show("wizard"); }
-
-function startNewGame(){
-  const seed = Math.floor(Math.random()*999999);
-  const epochVal = document.getElementById("epoch").value;
-  const worldVal = document.getElementById("world").value;
-  const nameVal = document.getElementById("civName").value.trim();
-
-  game = {
-    version:"v1",
-    seed,
-    turn:1,
-    epoch: epochVal,
-    worldType: worldVal,
-    difficulty:"impitoyable",
-    player:{
-      name: nameVal || "Civilisation sans nom",
-      stats:{ population:120, food:90, materials:70, influence:50, cohesion:60 },
-      capital:{ hexId:null, name:"" }
-    },
-    factions: generateFactions(6),
-    map: generateMap(48,28, seed),
-    log:[]
-  };
-
-  // capitale au centre
-  const cq = Math.floor(game.map.w/2);
-  const cr = Math.floor(game.map.h/2);
-  const cap = getHexByQR(cq,cr);
-  if(cap){
-    game.player.capital.hexId = cap.id;
-    game.player.capital.name = generateCapitalName(seed);
-    cap.seen = true;
-  }
-
-  cam.x = 0; cam.y = 0; cam.scale = 1.0;
-  selectedHexId = game.player.capital.hexId;
-
-  saveGame();
-  initGameUI();
-  show("game");
-}
-
-function openArchives(){
-  const g = loadGame();
-  if(!g){ alert("Aucune archive pour l’instant."); return; }
-  game = g;
-  initGameUI();
-  show("game");
-}
-
-/* =========================
-   UI
-========================= */
-function initGameUI(){
-  canvas = document.getElementById("mapCanvas");
-  ctx = canvas.getContext("2d");
-
-  resizeCanvas();
-  attachMapEvents();
-  centerOnCapital();
-
-  renderHUD();
-  renderSide(selectedHexId !== null ? game.map.hexes[selectedHexId] : null);
-  renderActions();
-
-  requestDraw();
-  // boucle draw
-  cancelAnimationFrame(window.__civAnim || 0);
-  const loop = ()=>{ draw(); window.__civAnim = requestAnimationFrame(loop); };
-  window.__civAnim = requestAnimationFrame(loop);
-}
-
-function renderHUD(){
-  const p = game.player.stats;
-  document.getElementById("hud").innerHTML = `
-    <div class="hudLeft">
-      <div class="hudTitle"><b>${escapeHtml(game.player.name)}</b> — Tour ${game.turn} — ${labelEpoch(game.epoch)}</div>
-      <div class="hudMeta">${labelWorld(game.worldType)} • Seed ${game.seed} • Difficulté : IMPITOYABLE</div>
+      <div class="footer">
+        <span id="buildTag">build…</span>
+        <button id="btn-audio" class="btn small">Activer musique</button>
+      </div>
     </div>
-    <div class="pills">
-      <div class="pill">👥 <b>${p.population}</b></div>
-      <div class="pill">🌾 <b>${p.food}</b></div>
-      <div class="pill">🧱 <b>${p.materials}</b></div>
-      <div class="pill">🕊️ <b>${p.influence}</b></div>
-      <div class="pill">⚖️ <b>${p.cohesion}</b></div>
+
+    <!-- fond vivant -->
+    <div class="bg">
+      <div class="grain"></div>
+      <div class="mist"></div>
+      <div class="ink-vignette"></div>
     </div>
-  `;
-}
+  </main>
 
-function renderSide(hex){
-  const side = document.getElementById("side");
-  if(!hex){
-    side.innerHTML = `
-      <div class="block">
-        <div class="blockTitle">Sélection</div>
-        <div>Choisis un hex sur la carte.</div>
-        <div class="small">Glisser / zoomer, puis tap/clic.</div>
-      </div>`;
-    return;
-  }
-  const isCap = (hex.id === game.player.capital.hexId);
-  side.innerHTML = `
-    <div class="block">
-      <div class="blockTitle">Hex sélectionné</div>
-      <div><b>${labelBiome(hex.biome)}</b> — (q=${hex.q}, r=${hex.r})</div>
-      <div class="small">${isCap ? "📍 Capitale : " + escapeHtml(game.player.capital.name) : "Zone"}</div>
+  <!-- WIZARD -->
+  <main id="screen-wizard" class="screen" aria-label="Création de partie">
+    <div class="panel">
+      <div class="panelTitle">Créer civilisation</div>
+
+      <label class="field">
+        <span>Époque</span>
+        <select id="epoch">
+          <option value="prehistoire">Préhistoire</option>
+          <option value="antiquite">Antiquité</option>
+          <option value="medieval">Médiéval</option>
+          <option value="industriel">Industriel</option>
+          <option value="moderne">Moderne</option>
+          <option value="futur">Futur</option>
+        </select>
+      </label>
+
+      <label class="field">
+        <span>Monde</span>
+        <select id="world">
+          <option value="continent">Terre alternative</option>
+          <option value="archipel">Archipel</option>
+          <option value="supercontinent">Supercontinent</option>
+          <option value="deuxcontinents">Deux continents</option>
+          <option value="fracture">Monde fracturé</option>
+        </select>
+      </label>
+
+      <label class="field">
+        <span>Nom</span>
+        <input id="civName" placeholder="Nom de la civilisation (optionnel)" />
+      </label>
+
+      <div class="note">
+        Difficulté : <b>IMPITOYABLE</b> • actions jamais sûres • monde vivant • chocs majeurs imprévus
+      </div>
+
+      <div class="row">
+        <button id="btn-start" class="btn primary">Fonder</button>
+        <button id="btn-back" class="btn">Retour</button>
+      </div>
     </div>
-    <div class="block">
-      <div class="blockTitle">Lecture</div>
-      <div>${biomeFlavor(hex.biome, game.epoch)}</div>
-      <div class="small">Illustrations sur carte : esthétiques uniquement (non observées par l’IA).</div>
-    </div>
-  `;
-}
+  </main>
 
-function renderActions(){
-  const box = document.getElementById("actions");
-  box.innerHTML = "";
-  const actions = [
-    {t:"Rassembler le conseil", r:"faible"},
-    {t:"Consolider les réserves", r:"moyen"},
-    {t:"Envoyer des éclaireurs", r:"élevé"},
-    {t:"Renforcer la garde", r:"moyen"},
-  ];
-  actions.forEach(a=>{
-    const d = document.createElement("div");
-    d.className="action";
-    const dot = a.r==="faible" ? "low" : (a.r==="élevé" ? "high" : "");
-    d.innerHTML = `<b>${a.t}</b><div class="risk"><span class="riskDot ${dot}"></span>Risque ${a.r}</div>`;
-    d.onclick = ()=>alert("Étape 2 : ces actions deviendront planifiables (jusqu’à 3/tour) + durées 2–5 tours.");
-    box.appendChild(d);
-  });
-}
+  <!-- GAME (placeholder propre) -->
+  <main id="screen-game" class="screen" aria-label="Jeu">
+    <header class="hud">
+      <div>
+        <div id="hudTitle" class="hudTitle">…</div>
+        <div id="hudMeta" class="hudMeta">…</div>
+      </div>
+      <div class="hudPills" id="hudPills"></div>
+    </header>
 
-/* =========================
-   CANVAS + HEX MATH
-========================= */
-function resizeCanvas(){
-  const rect = canvas.getBoundingClientRect();
-  const dpr = Math.max(1, window.devicePixelRatio || 1);
-  canvas.width = Math.floor(rect.width * dpr);
-  canvas.height = Math.floor(rect.height * dpr);
-  ctx.setTransform(dpr,0,0,dpr,0,0); // draw in CSS pixels
+    <section class="layout">
+      <div class="mapWrap">
+        <div class="mapHint">Glisser = déplacer • Pincer = zoom • Tap = sélectionner</div>
+        <canvas id="mapCanvas"></canvas>
+      </div>
 
-  const minDim = Math.min(rect.width, rect.height);
-  HEX.size = Math.max(12, Math.min(22, Math.floor(minDim / 22)));
-  requestDraw();
-}
+      <aside class="side" id="sidePanel">
+        <div class="block">
+          <div class="blockTitle">Chronique</div>
+          <div class="blockBody" id="log">Bienvenue. Étape suivante : carte hex interactive + panneau contextuel.</div>
+        </div>
+      </aside>
+    </section>
 
-function axialToPixel(q,r){
-  const x = HEX.size * (3/2 * q);
-  const y = HEX.size * (HEX.sqrt3 * (r + q/2));
-  return {x,y};
-}
+    <footer class="actions" id="actionsBar">
+      <button class="action" data-a="council">Rassembler le conseil</button>
+      <button class="action" data-a="stock">Consolider les réserves</button>
+      <button class="action" data-a="scout">Envoyer des éclaireurs</button>
+      <button class="action" data-a="guard">Renforcer la garde</button>
+    </footer>
+  </main>
 
-function hexRound(q,r){
-  let x=q, z=r, y=-x-z;
-  let rx=Math.round(x), ry=Math.round(y), rz=Math.round(z);
-  const xd=Math.abs(rx-x), yd=Math.abs(ry-y), zd=Math.abs(rz-z);
-  if(xd>yd && xd>zd) rx=-ry-rz;
-  else if(yd>zd) ry=-rx-rz;
-  else rz=-rx-ry;
-  return {q:rx, r:rz};
-}
-
-function screenToWorld(sx,sy){
-  return { x:(sx-cam.x)/cam.scale, y:(sy-cam.y)/cam.scale };
-}
-function worldToScreen(wx,wy){
-  return { x:wx*cam.scale + cam.x, y:wy*cam.scale + cam.y };
-}
-
-function centerOnCapital(){
-  if(!game || game.player.capital.hexId===null) return;
-  const cap = game.map.hexes[game.player.capital.hexId];
-  const wp = axialToPixel(cap.q, cap.r);
-
-  const w = canvas.clientWidth;
-  const h = canvas.clientHeight;
-
-  cam.scale = 1.0;
-  cam.x = (w/2) - wp.x*cam.scale;
-  cam.y = (h/2) - wp.y*cam.scale;
-
-  requestDraw();
-}
-
-/* =========================
-   INTERACTIONS (PAN/ZOOM/CLICK)
-========================= */
-function attachMapEvents(){
-  const mapEl = document.getElementById("map");
-
-  // éviter double-attachment
-  mapEl.onpointerdown = mapEl.onpointermove = mapEl.onpointerup = mapEl.onpointercancel = null;
-  mapEl.onwheel = null;
-
-  mapEl.addEventListener("pointerdown", (e)=>{
-    mapEl.setPointerCapture(e.pointerId);
-    pointers.set(e.pointerId, {x:e.clientX, y:e.clientY});
-    if(pointers.size===1){
-      lastPan = {x:e.clientX, y:e.clientY, camX:cam.x, camY:cam.y};
-    }
-  });
-
-  mapEl.addEventListener("pointermove", (e)=>{
-    if(!pointers.has(e.pointerId)) return;
-    const prev = pointers.get(e.pointerId);
-    pointers.set(e.pointerId, {x:e.clientX, y:e.clientY});
-
-    if(pointers.size===1 && lastPan){
-      const dx = e.clientX - lastPan.x;
-      const dy = e.clientY - lastPan.y;
-      cam.x = lastPan.camX + dx;
-      cam.y = lastPan.camY + dy;
-      requestDraw();
-    }
-
-    if(pointers.size===2){
-      // pinch zoom
-      const pts = Array.from(pointers.values());
-      const d0 = dist(prev.x, prev.y, pts[0].x, pts[0].y); // not perfect but ok
-      const d1 = dist(pts[0].x, pts[0].y, pts[1].x, pts[1].y);
-      // compute new based on current distance
-      // fallback: zoom by small delta based on movement
-      // simpler approach: use actual distances each move
-      const pArr = Array.from(pointers.values());
-      const D = dist(pArr[0].x,pArr[0].y,pArr[1].x,pArr[1].y);
-      if(!mapEl.__pinch){ mapEl.__pinch = {D, scale:cam.scale}; }
-      const ratio = D / mapEl.__pinch.D;
-      const newScale = clamp(mapEl.__pinch.scale * ratio, 0.6, 2.6);
-
-      // zoom around midpoint
-      const mx = (pArr[0].x + pArr[1].x)/2 - mapEl.getBoundingClientRect().left;
-      const my = (pArr[0].y + pArr[1].y)/2 - mapEl.getBoundingClientRect().top;
-      zoomAt(mx, my, newScale);
-
-      requestDraw();
-    }
-  });
-
-  mapEl.addEventListener("pointerup", (e)=>{
-    // click selection if it was a tap (no significant move)
-    const wasSingle = pointers.size===1;
-    pointers.delete(e.pointerId);
-
-    if(pointers.size<2) mapEl.__pinch = null;
-    lastPan = null;
-
-    if(wasSingle){
-      // interpret as click/tap
-      const rect = mapEl.getBoundingClientRect();
-      const sx = e.clientX - rect.left;
-      const sy = e.clientY - rect.top;
-      selectHexAtScreen(sx, sy);
-    }
-  });
-
-  mapEl.addEventListener("pointercancel", (e)=>{
-    pointers.delete(e.pointerId);
-    if(pointers.size<2) mapEl.__pinch = null;
-    lastPan = null;
-  });
-
-  // wheel zoom desktop
-  mapEl.addEventListener("wheel", (e)=>{
-    e.preventDefault();
-    const rect = mapEl.getBoundingClientRect();
-    const sx = e.clientX - rect.left;
-    const sy = e.clientY - rect.top;
-
-    const delta = Math.sign(e.deltaY);
-    const factor = (delta>0) ? 0.92 : 1.08;
-    const newScale = clamp(cam.scale * factor, 0.6, 2.6);
-    zoomAt(sx, sy, newScale);
-    requestDraw();
-  }, {passive:false});
-}
-
-function dist(x1,y1,x2,y2){
-  const dx=x2-x1, dy=y2-y1;
-  return Math.sqrt(dx*dx+dy*dy);
-}
-function clamp(v,min,max){ return Math.max(min, Math.min(max, v)); }
-
-function zoomAt(screenX, screenY, newScale){
-  // keep world point under cursor stable
-  const before = screenToWorld(screenX, screenY);
-  cam.scale = newScale;
-  const after = screenToWorld(screenX, screenY);
-  cam.x += (after.x - before.x) * cam.scale;
-  cam.y += (after.y - before.y) * cam.scale;
-}
-
-function selectHexAtScreen(sx, sy){
-  if(!game) return;
-  const w = screenToWorld(sx, sy);
-  // approximate axial from world coords
-  const q = (2/3 * w.x) / HEX.size;
-  const r = ((-1/3 * w.x) + (HEX.sqrt3/3 * w.y)) / HEX.size;
-  const hr = hexRound(q,r);
-  const hex = getHexByQR(hr.q, hr.r);
-  if(!hex) return;
-
-  selectedHexId = hex.id;
-  hex.seen = true;
-  renderSide(hex);
-  requestDraw();
-}
-
-/* =========================
-   DRAW
-========================= */
-function requestDraw(){ needsRedraw = true; }
-
-function draw(){
-  if(!needsRedraw) return;
-  needsRedraw = false;
-
-  const w = canvas.clientWidth;
-  const h = canvas.clientHeight;
-
-  ctx.clearRect(0,0,w,h);
-
-  // subtle parchment wash
-  ctx.fillStyle = "rgba(255,255,255,0.10)";
-  ctx.fillRect(0,0,w,h);
-
-  // visible culling bounds
-  const tl = screenToWorld(0,0);
-  const br = screenToWorld(w,h);
-
-  for(const hex of game.map.hexes){
-    const wp = axialToPixel(hex.q, hex.r);
-    if(wp.x < tl.x - HEX.size*6 || wp.x > br.x + HEX.size*6) continue;
-    if(wp.y < tl.y - HEX.size*6 || wp.y > br.y + HEX.size*6) continue;
-
-    const sp = worldToScreen(wp.x, wp.y);
-    drawHex(sp.x, sp.y, HEX.size * cam.scale, hex);
-  }
-
-  // selected outline
-  if(selectedHexId !== null){
-    const hex = game.map.hexes[selectedHexId];
-    if(hex){
-      const wp = axialToPixel(hex.q, hex.r);
-      const sp = worldToScreen(wp.x, wp.y);
-      drawHexOutline(sp.x, sp.y, HEX.size * cam.scale, "rgba(122,46,46,0.95)", 2);
-    }
-  }
-
-  // capital marker
-  if(game.player.capital.hexId !== null){
-    const cap = game.map.hexes[game.player.capital.hexId];
-    const wp = axialToPixel(cap.q, cap.r);
-    const sp = worldToScreen(wp.x, wp.y);
-    ctx.save();
-    ctx.fillStyle = "rgba(138,106,63,0.95)";
-    ctx.strokeStyle = "rgba(43,36,24,0.95)";
-    ctx.lineWidth = 1;
-    ctx.beginPath();
-    ctx.arc(sp.x, sp.y, Math.max(3, 3*cam.scale), 0, Math.PI*2);
-    ctx.fill(); ctx.stroke();
-    ctx.restore();
-  }
-}
-
-function drawHex(cx, cy, size, hex){
-  const fill = biomeColor(hex.biome);
-
-  ctx.save();
-  ctx.beginPath();
-  for(let i=0;i<6;i++){
-    const a = (Math.PI/180) * (60*i - 30);
-    const x = cx + size * Math.cos(a);
-    const y = cy + size * Math.sin(a);
-    if(i===0) ctx.moveTo(x,y); else ctx.lineTo(x,y);
-  }
-  ctx.closePath();
-
-  ctx.fillStyle = fill;
-  ctx.fill();
-
-  ctx.strokeStyle = "rgba(43,36,24,0.55)";
-  ctx.lineWidth = 1;
-  ctx.stroke();
-
-  // light ink hatching
-  if(size > 10){
-    ctx.strokeStyle = "rgba(43,36,24,0.05)";
-    ctx.lineWidth = 1;
-    ctx.beginPath();
-    ctx.moveTo(cx - size*0.45, cy - size*0.10);
-    ctx.lineTo(cx + size*0.45, cy + size*0.10);
-    ctx.moveTo(cx - size*0.30, cy + size*0.15);
-    ctx.lineTo(cx + size*0.30, cy - size*0.15);
-    ctx.stroke();
-  }
-
-  ctx.restore();
-}
-
-function drawHexOutline(cx, cy, size, color, width){
-  ctx.save();
-  ctx.beginPath();
-  for(let i=0;i<6;i++){
-    const a = (Math.PI/180) * (60*i - 30);
-    const x = cx + size * Math.cos(a);
-    const y = cy + size * Math.sin(a);
-    if(i===0) ctx.moveTo(x,y); else ctx.lineTo(x,y);
-  }
-  ctx.closePath();
-  ctx.strokeStyle = color;
-  ctx.lineWidth = width;
-  ctx.stroke();
-  ctx.restore();
-}
-
-/* =========================
-   BOOT
-========================= */
-function wireButtons(){
-  document.getElementById("btnNew").addEventListener("click", startWizard);
-  document.getElementById("btnArchives").addEventListener("click", openArchives);
-  document.getElementById("btnFound").addEventListener("click", startNewGame);
-  document.getElementById("btnBackHome").addEventListener("click", ()=>show("home"));
-}
-
-document.addEventListener("DOMContentLoaded", ()=>{
-  wireButtons();
-
-  // auto: si sauvegarde existe, on reste en accueil (pas d’auto-load)
-  show("home");
-});
-</script>
-
+  <script src="app.js?v=1" defer></script>
 </body>
 </html>
