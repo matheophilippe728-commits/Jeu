@@ -305,6 +305,24 @@
 </head>
 
 <body>
+  <div id="pwaDebug" style="
+  position:fixed; left:10px; right:10px; bottom:10px;
+  z-index:999999; padding:8px 10px; border-radius:10px;
+  background:rgba(0,0,0,.65); color:#fff; font:12px/1.2 -apple-system, Arial;
+  border:1px solid rgba(255,255,255,.15);
+">
+  DEBUG…
+</div>
+
+<script>
+  (function () {
+    const el = document.getElementById("pwaDebug");
+    const standalone =
+      (window.matchMedia && window.matchMedia("(display-mode: standalone)").matches) ||
+      window.navigator.standalone;
+    el.textContent = "URL: " + location.href + " | standalone: " + (!!standalone);
+  })();
+</script>
   <div class="frame">
     <div class="board">
 
@@ -461,9 +479,9 @@
           </div>
         </div>
 
-     </div>
-    </div>
-  </div>
+           </div> <!-- /ui -->
+    </div>   <!-- /board -->
+  </div>     <!-- /frame -->
 
 <script>
   if ("serviceWorker" in navigator) {
@@ -472,6 +490,6 @@
     });
   }
 </script>
-
+  
 </body>
 </html>
