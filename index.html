@@ -1,0 +1,113 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+<title>CIVITAS: RUINES</title>
+<style>
+:root{
+  --ink:#24180e; --ink2:#2e2012;
+  --paper1:#f3e6c9; --paper2:#e4d0a4;
+  --shadow:rgba(0,0,0,.45);
+  --ui:#1e1a14;
+  --ui2:#2b241b;
+  --ui3:#3a3125;
+  --uiText:#f3ead4;
+  --accent:#d7c08f;
+  --line:rgba(255,255,255,.10);
+  --soft:rgba(255,255,255,.16);
+}
+
+*{box-sizing:border-box}
+body{
+  margin:0; height:100vh; display:flex; justify-content:center; align-items:center;
+  font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,Arial,sans-serif;
+  background:
+    radial-gradient(900px 600px at 20% 20%, rgba(255,255,255,.07), transparent 60%),
+    radial-gradient(800px 520px at 80% 30%, rgba(255,255,255,.05), transparent 62%),
+    radial-gradient(1200px 800px at 50% 90%, rgba(0,0,0,.40), rgba(0,0,0,.92)),
+    repeating-linear-gradient(90deg, rgba(255,255,255,.05) 0 14px, rgba(0,0,0,0) 14px 28px),
+    linear-gradient(180deg,#121212,#050505);
+  color:var(--ink);
+}
+
+.parchment{
+  width:min(1100px,96vw);
+  height:min(860px,96vh);
+  border-radius:20px;
+  background:linear-gradient(135deg,var(--paper1),var(--paper2));
+  box-shadow:0 28px 70px var(--shadow);
+  position:relative;
+  overflow:hidden;
+  border:1px solid rgba(0,0,0,.20);
+}
+.parchment::before{
+  content:""; position:absolute; inset:-26px; pointer-events:none;
+  background:
+    repeating-linear-gradient(0deg, rgba(0,0,0,.028) 0 1px, transparent 1px 5px),
+    radial-gradient(circle at 18% 28%, rgba(0,0,0,.07), transparent 50%),
+    radial-gradient(circle at 78% 66%, rgba(0,0,0,.06), transparent 55%);
+  opacity:.72; mix-blend-mode:multiply;
+}
+
+#root{ position:relative; z-index:2; height:100%; padding:12px; }
+
+.center{ text-align:center; }
+.title{
+  font-family:"Snell Roundhand","Apple Chancery","Bradley Hand","Segoe Script",cursive;
+  font-size:clamp(44px,6vw,70px);
+  color:var(--ink2);
+  margin:0;
+  line-height:1.05;
+}
+.subtitle{
+  margin-top:-6px;
+  letter-spacing:.08em;
+  text-transform:uppercase;
+  font-size:clamp(12px,2.2vw,16px);
+  color:rgba(46,32,18,.72);
+}
+.tagline{ margin:10px 0 12px; color:rgba(46,32,18,.80); font-size:clamp(13px,2.6vw,17px); }
+
+.btncol{ width:min(560px,92%); margin:10px auto 0; display:flex; flex-direction:column; gap:10px; }
+.btn{
+  width:100%;
+  padding:14px;
+  border:none;
+  border-radius:14px;
+  cursor:pointer;
+  background:linear-gradient(180deg,#3a2a18,#2b1f12);
+  color:#f4e7c8;
+  font-size:16px;
+  box-shadow:0 10px 18px rgba(0,0,0,.18);
+}
+.btn:active{ transform:translateY(1px); }
+
+.card{
+  width:min(640px,92%);
+  margin:0 auto;
+  padding:14px;
+  border-radius:16px;
+  background:rgba(255,255,255,.42);
+  border:1px solid rgba(46,32,18,.14);
+  box-shadow:0 10px 20px rgba(0,0,0,.08);
+}
+
+label{ display:block; margin:8px 0 6px; font-size:12px; color:rgba(46,32,18,.74); }
+select,input{
+  width:100%; padding:11px; border-radius:12px;
+  border:1px solid rgba(46,32,18,.18);
+  background:rgba(255,255,255,.58);
+  color:var(--ink2);
+  font-size:15px;
+  outline:none;
+}
+.actions{ display:flex; gap:10px; flex-wrap:wrap; margin-top:10px; }
+.btn2{
+  flex:1; min-width:140px;
+  padding:12px;
+  border:none;
+  border-radius:12px;
+  cursor:pointer;
+  background:#2b1f12;
+  color:#
