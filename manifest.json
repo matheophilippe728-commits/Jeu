@@ -1,14 +1,15 @@
 {
   "name": "Civitas: Ruines",
   "short_name": "Civitas",
-  "start_url": "/?source=pwa",
+  "start_url": "./",
+  "scope": "./",
   "display": "standalone",
   "background_color": "#0f1115",
   "theme_color": "#0f1115",
   "orientation": "landscape",
   "description": "Jeu de stratégie narratif à choix, tours et rapports immersifs selon l'époque.",
   "icons": [
-    { "src": "/icons/icon-192.png", "sizes": "192x192", "type": "image/png" },
-    { "src": "/icons/icon-512.png", "sizes": "512x512", "type": "image/png" }
+    { "src": "icons/icon-192.png", "sizes": "192x192", "type": "image/png" },
+    { "src": "icons/icon-512.png", "sizes": "512x512", "type": "image/png" }
   ]
 }
