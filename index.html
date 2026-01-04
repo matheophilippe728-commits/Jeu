@@ -43,29 +43,10 @@
   }
 
   /* Overlay de texture légère */
-  body::before{
-  content:"";
-  position:absolute; /* IMPORTANT : plus de fixed */
-  inset:0;
-  background:
-    repeating-linear-gradient(
-      0deg,
-      rgba(255,255,255,.02) 0 1px,
-      transparent 1px 5px
-    ),
-    radial-gradient(
-      circle at 30% 30%,
-      rgba(176,138,90,.06),
-      transparent 55%
-    ),
-    radial-gradient(
-      circle at 70% 65%,
-      rgba(90,160,200,.05),
-      transparent 60%
-    );
-  opacity:.55;
-  pointer-events:none;
+  body {
+  background: #1b1a17;
 }
+
     
 
   /* Frame */
